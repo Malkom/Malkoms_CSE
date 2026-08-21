@@ -7,45 +7,9 @@ ns.addonName = addonName
 ns.version = (C_AddOns and C_AddOns.GetAddOnMetadata and C_AddOns.GetAddOnMetadata(addonName, "Version"))
 	or (GetAddOnMetadata and GetAddOnMetadata(addonName, "Version")) or "1.0.0"
 
---------------------------------------------------------------------------------
--- Localization (default = English key; frFR overrides)
---------------------------------------------------------------------------------
-
-local L = setmetatable({}, { __index = function(_, k) return k end })
-ns.L = L
-
-if GetLocale() == "frFR" then
-	L["Malkoms Current Set Equipped"] = "Malkoms - Set équipé actuel"
-	L["Theme"] = "Thème"
-	L["Default"] = "Défaut"
-	L["Lock button (disable move/resize)"] = "Verrouiller le bouton (désactive déplacement/redimensionnement)"
-	L["Keep aspect ratio"] = "Conserver le ratio"
-	L["Width"] = "Largeur"
-	L["Height"] = "Hauteur"
-	L["Reset position"] = "Réinitialiser la position"
-	L["Reset size"] = "Réinitialiser la taille"
-	L["No equipment set equipped."] = "Aucun set d'équipement équipé."
-	L["Drag to move, drag corner to resize."] = "Glisser pour déplacer, coin pour redimensionner."
-	L["Right-click for options."] = "Clic droit pour les options."
-	L["Locked"] = "Verrouillé"
-	L["Equipped set"] = "Set équipé"
-	L["Display"] = "Affichage"
-	L["Size"] = "Taille"
-	L["Opacity"] = "Opacité"
-	L["Frame strata"] = "Niveau d'affichage (strata)"
-	L["Show set name"] = "Afficher le nom du set"
-	L["Text position"] = "Position du texte"
-	L["Top (inside)"] = "Haut (intérieur)"
-	L["Bottom (inside)"] = "Bas (intérieur)"
-	L["Text offset X"] = "Décalage texte X"
-	L["Text offset Y"] = "Décalage texte Y"
-	L["Text"] = "Texte"
-	L["Font"] = "Police"
-	L["Font size"] = "Taille de police"
-	L["Outline"] = "Contour"
-	L["None"] = "Aucun"
-	L["Thick outline"] = "Contour épais"
-end
+-- Localization lives in Locales/<locale>.lua (loaded before this file).
+-- Fallback in case those files are missing for some reason.
+ns.L = ns.L or setmetatable({}, { __index = function(_, k) return k end })
 
 --------------------------------------------------------------------------------
 -- SavedVariables / defaults
@@ -64,6 +28,7 @@ ns.defaults = {
 	theme    = "Default", -- Default | ElvUI | Masque
 	opacity  = 1,         -- 0.1 - 1
 	strata   = "MEDIUM",  -- frame strata
+	visibility = { world = true, dungeon = true, raid = true }, -- dungeon includes delves
 	showName = true,      -- show the set name on the button
 	namePos  = "BOTTOM",  -- TOP | BOTTOM (inside the button)
 	nameX    = 0,         -- horizontal text offset

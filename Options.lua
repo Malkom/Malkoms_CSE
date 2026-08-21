@@ -72,6 +72,7 @@ end
 
 local function AddCheckbox(canvas, label, get, set)
 	local cb = CreateFrame("CheckButton", nil, canvas.child, "UICheckButtonTemplate")
+	cb:SetSize(24, 24) -- match MDB Guild & Friends
 	cb:SetPoint("TOPLEFT", 4, canvas.y)
 	cb:SetChecked(get() and true or false)
 	local fs = cb:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
@@ -84,6 +85,7 @@ local function AddCheckbox(canvas, label, get, set)
 end
 
 local function AddDropdown(canvas, label, options, get, set)
+	canvas.y = canvas.y - 8 -- breathing room above the label
 	local fs = canvas.child:CreateFontString(nil, "ARTWORK", "GameFontNormal")
 	fs:SetPoint("TOPLEFT", 4, canvas.y)
 	fs:SetText(label)
@@ -118,6 +120,7 @@ local function AddDropdown(canvas, label, options, get, set)
 end
 
 local function AddSlider(canvas, label, minV, maxV, step, get, set)
+	canvas.y = canvas.y - 8 -- breathing room above the label
 	local fs = canvas.child:CreateFontString(nil, "ARTWORK", "GameFontNormal")
 	fs:SetPoint("TOPLEFT", 4, canvas.y)
 	fs:SetText(label)
@@ -244,6 +247,18 @@ ns.OnReady(function()
 			ns.db.opacity = v / 100
 			if ns.CSE_ApplyOpacity then ns.CSE_ApplyOpacity() end
 		end)
+
+	-- Visibility section
+	AddHeader(canvas, L["Visibility"])
+	AddCheckbox(canvas, L["Open World"],
+		function() return ns.db.visibility.world end,
+		function(v) ns.db.visibility.world = v; if ns.CSE_ApplyVisibility then ns.CSE_ApplyVisibility() end end)
+	AddCheckbox(canvas, L["Dungeons (incl. Delves)"],
+		function() return ns.db.visibility.dungeon end,
+		function(v) ns.db.visibility.dungeon = v; if ns.CSE_ApplyVisibility then ns.CSE_ApplyVisibility() end end)
+	AddCheckbox(canvas, L["Raids"],
+		function() return ns.db.visibility.raid end,
+		function(v) ns.db.visibility.raid = v; if ns.CSE_ApplyVisibility then ns.CSE_ApplyVisibility() end end)
 
 	-- Text section
 	AddHeader(canvas, L["Text"])

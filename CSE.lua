@@ -215,18 +215,37 @@ function ns.CSE_ApplyName()
 	end
 end
 
+-- Map the current instance type to one of our visibility buckets.
+-- Delves report as "scenario", so they fall under the Dungeons toggle (as requested).
+local VIS_MAP = { none = "world", party = "dungeon", scenario = "dungeon", raid = "raid" }
+local function VisibilityAllows()
+	local _, instanceType = GetInstanceInfo()
+	local bucket = VIS_MAP[instanceType]
+	if not bucket then return true end -- pvp/arena/other: don't hide
+	return db.visibility and db.visibility[bucket] ~= false
+end
+
+local function UpdateShown()
+	if not f then return end
+	if f.setName and VisibilityAllows() then
+		f:Show()
+	else
+		f:Hide()
+	end
+end
+ns.CSE_ApplyVisibility = UpdateShown
+
 local function Refresh()
 	local name, icon = GetEquippedSet()
 	if name then
 		f.setName = name
 		f.icon:SetTexture(icon or QUESTION_ICON)
 		ns.CSE_ApplyName()
-		f:Show()
 	else
 		f.setName = nil
 		if f.label then f.label:Hide() end
-		f:Hide()
 	end
+	UpdateShown()
 end
 ns.CSE_Refresh = Refresh
 
@@ -241,6 +260,7 @@ local UPDATE_EVENTS = {
 	"PLAYER_EQUIPMENT_CHANGED",
 	"ACTIVE_TALENT_GROUP_CHANGED",
 	"WEAR_EQUIPMENT_SET",
+	"ZONE_CHANGED_NEW_AREA",
 }
 
 ns.OnReady(function()
@@ -277,35 +297,47 @@ ns.OnReady(function()
 		if not db.locked then f:StartSizing("BOTTOMRIGHT") end
 	end)
 	grip:SetScript("OnMouseUp", function()
-		f:StopMovingAndSizing()
+		f:StopMovingOrSizing()
 		SaveSizeFromFrame()
 		if ns.CSE_RefreshSizeControls then ns.CSE_RefreshSizeControls() end
+	end)
+
+	local function stopMoving(self)
+		if self.isMoving then
+			self:StopMovingOrSizing()
+			self.isMoving = false
+			SavePosition()
+		end
+	end
+
+	-- Dedicated watcher frame: its OnUpdate can't be clobbered by the theme
+	-- skinning the button (e.g. Masque). It guarantees the move stops as soon as
+	-- the left mouse button is released, even if the cursor outran the frame and
+	-- the mouse-up landed somewhere else.
+	local mover = CreateFrame("Frame")
+	mover:Hide()
+	mover:SetScript("OnUpdate", function(self)
+		if not f.isMoving or not IsMouseButtonDown("LeftButton") then
+			stopMoving(f)
+			self:Hide()
+		end
 	end)
 
 	f:SetScript("OnMouseDown", function(self, button)
 		if button == "LeftButton" and not db.locked then
 			self:StartMoving()
 			self.isMoving = true
+			mover:Show()
 		end
 	end)
 	f:SetScript("OnMouseUp", function(self, button)
-		if self.isMoving then
-			self:StopMovingAndSizing()
-			self.isMoving = false
-			SavePosition()
-		end
+		stopMoving(self)
+		mover:Hide()
 		if button == "RightButton" then
 			ns.OpenOptions()
 		end
 	end)
-	-- Safety: if focus is lost mid-drag, stop moving on hide
-	f:SetScript("OnHide", function(self)
-		if self.isMoving then
-			self:StopMovingAndSizing()
-			self.isMoving = false
-			SavePosition()
-		end
-	end)
+	f:SetScript("OnHide", function(self) stopMoving(self); mover:Hide() end)
 
 	f:SetScript("OnSizeChanged", function(self, w)
 		if sizingGuard then return end

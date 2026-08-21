@@ -3,7 +3,7 @@
 ## Notes: Movable/resizable button showing the icon of your currently equipped equipment set. Themes: Default / ElvUI / Masque.
 ## Notes-frFR: Bouton déplaçable/redimensionnable affichant l'icône de votre set d'équipement actuellement équipé. Thèmes : Défaut / ElvUI / Masque.
 ## Author: Malkom
-## Version: 1.4.1
+## Version: 1.5.0
 ## X-License: GPLv3
 ## X-Curse-Project-ID: 1660707
 ## OptionalDeps: Masque, ElvUI, LibSharedMedia-3.0
@@ -11,6 +11,8 @@
 ## IconTexture: Interface\Icons\INV_Misc_Gear_01
 ## X-Category: Inventory
 
+Locales\enUS.lua
+Locales\frFR.lua
 Core.lua
 CSE.lua
 Options.lua
