@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.5.1
+- Added **WoW Forever** (Classic+) support: a dedicated Forever TOC ships with the addon, so it loads on the Forever client and now lists as Forever-compatible on CurseForge.
+- Retail TOC updated to interface 12.1.5.
+
 ## 1.5.0
 - Fixed the button sticking to the cursor when moved (the stop call used the wrong API name; it now stops reliably in every theme).
 - New **Visibility** options: show the button in Open World / Dungeons (incl. Delves) / Raids.

@@ -1,9 +1,9 @@
-## Interface: 120100
+## Interface: 120105
 ## Title: Malkoms Current Set Equipped
 ## Notes: Movable/resizable button showing the icon of your currently equipped equipment set. Themes: Default / ElvUI / Masque.
 ## Notes-frFR: Bouton déplaçable/redimensionnable affichant l'icône de votre set d'équipement actuellement équipé. Thèmes : Défaut / ElvUI / Masque.
 ## Author: Malkom
-## Version: 1.5.0
+## Version: 1.5.1
 ## X-License: GPLv3
 ## X-Curse-Project-ID: 1660707
 ## OptionalDeps: Masque, ElvUI, LibSharedMedia-3.0
